@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BuldSystem : MonoBehaviour
 {
+
     public Vector2Int GridSize = new Vector2Int(10, 10);
     
     private Building[,] grid;
@@ -45,15 +46,45 @@ public class BuldSystem : MonoBehaviour
                 bool available = true;
 
                 if(x < 0 || x > GridSize.x - flyingBuilding.Size.x) available = false;
-                if(y < 0 || x > GridSize.y - flyingBuilding.Size.y) available = false;
+                if(y < 0 || y > GridSize.y - flyingBuilding.Size.y) available = false;
+                
+                if(available && IsPlaceTaken(x,y)) available = false;
 
                 flyingBuilding.transform.position = new Vector3(x, 0, y);
+                flyingBuilding.SetTransparent(available);
 
                 if(available && Input.GetMouseButtonDown(0))
                 {
-                    flyingBuilding = null;
+                    PlaceFlyingBuilding(x, y);
                 }
             }
         }
+    }
+
+    private bool IsPlaceTaken(int placeX, int placeY)
+    {
+        for(int x = 0; x < flyingBuilding.Size.x; x++)
+        {
+            for(int y = 0; y < flyingBuilding.Size.y; y++)
+            {
+                if(grid[placeX + x, placeY + y] != null) return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void PlaceFlyingBuilding(int placeX, int placeY)
+    {
+        for(int x = 0; x < flyingBuilding.Size.x; x++)
+        {
+            for(int y = 0; y < flyingBuilding.Size.y; y++)
+            {
+                grid[placeX + x, placeY + y] = flyingBuilding;
+            }
+        }
+
+        flyingBuilding.SetNormal();
+        flyingBuilding = null;
     }
 }

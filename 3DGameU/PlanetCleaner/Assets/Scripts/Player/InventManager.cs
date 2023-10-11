@@ -48,7 +48,7 @@ public class InventManager : MonoBehaviour
             }
         }
     }
-    private void AddItem(Inventory _item, int _amount)
+    private void AddItem(SlotInventory _item, int _amount)
     {
         // foreach(SlotInventory slot in slots)
         // {
